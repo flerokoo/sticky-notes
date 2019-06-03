@@ -1,0 +1,52 @@
+{
+  "name": "sticky-notes",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start:client": "./node_modules/.bin/webpack-dev-server",
+    "start:server": "./node_modules/.bin/nodemon dist/server/bundle.js --delay=500ms"
+  },
+  "keywords": [],
+  "author": "Emile Shodiev <emile.shodiev@yandex.ru> (http://shodiev.ru)",
+  "license": "ISC",
+  "dependencies": {
+    "compression": "^1.7.4",
+    "ejs": "^2.6.1",
+    "express": "^4.17.1",
+    "express-session": "^1.16.1",
+    "helmet": "^3.18.0",
+    "normalize.css": "^8.0.1",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-redux": "^7.0.3",
+    "redux": "^4.0.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.4.5",
+    "@babel/preset-env": "^7.4.5",
+    "@babel/preset-react": "^7.0.0",
+    "@babel/register": "^7.4.4",
+    "babel-loader": "^8.0.6",
+    "browser-sync": "^2.26.5",
+    "css-loader": "^2.1.1",
+    "eslint": "^5.16.0",
+    "eslint-plugin-react": "^7.13.0",
+    "gulp": "^4.0.2",
+    "gulp-cli": "^2.2.0",
+    "html-webpack-plugin": "^3.2.0",
+    "mini-css-extract-plugin": "^0.7.0",
+    "node-sass": "^4.12.0",
+    "nodemon": "^1.19.1",
+    "postcss-loader": "^3.0.0",
+    "precss": "^4.0.0",
+    "react-router-dom": "^5.0.0",
+    "redux-devtools": "^3.5.0",
+    "sass-loader": "^7.1.0",
+    "style-loader": "^0.23.1",
+    "webpack": "^4.32.2",
+    "webpack-cli": "^3.3.2",
+    "webpack-dev-server": "^3.4.1",
+    "webpack-node-externals": "^1.7.2"
+  }
+}
