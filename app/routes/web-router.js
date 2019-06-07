@@ -5,33 +5,40 @@ import React from 'react';
 import ReactDOM from 'react-dom/server';
 import Main from '../components/main';
 import { StaticRouter } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import configureStore from '../reducers/configure-store';
 
-let router = express.Router();
+
 let template = readFileSync("templates/index.ejs").toString();
 let compiled = ejs.compile(template);
 
-router.get("/*", (req, res) => {
-    let context = {};
+export default function configureWebRouter(router) {
+    router.get("/*", (req, res) => {
+        let context = {};
+        let store = configureStore();
+        let react = ReactDOM.renderToString((
+            <Provider store={store}>
+                <StaticRouter location={req.url} context={context}>
+                    <Main />
+                </StaticRouter>
+            </Provider>
+        ));
 
-    let react = ReactDOM.renderToString((
-        <StaticRouter location={req.url} context={context}>
-            <Main/>
-        </StaticRouter>
-    ));
+        if (context.url) {
+            res.writeHead(301, {
+                Location: context.url
+            });
+            res.end();
+        } else {
+            let water = compiled({
+                react,
+                redux: store.getState(),
+                title: "Some title"
+            })
 
-    if (context.url) {
-        res.writeHead(301, {
-            Location: context.url
-        });
-        res.end();
-    } else {
-        let water = compiled({
-            react, title: "Some title"
-        })
+            res.send(water);
+        }
+    });
 
-        res.send(water);
-    }    
-});
-
-
-export default router;
+    return router;
+}

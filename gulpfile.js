@@ -1,7 +1,8 @@
 const gulp = require("gulp"),
     nodemon = require("nodemon"),
     browserSync = require("browser-sync"),
-    webpack = require("webpack");
+    webpack = require("webpack"),
+    debounce = require("lodash/debounce")
 
 
 let config = {
@@ -23,8 +24,7 @@ gulp.task("build:server", buildFromEntry("server", webpackConfs.serverConfig));
 gulp.task("build:client", buildFromEntry("client", webpackConfs.clientConfig));
 
 gulp.task("watch", callback => {
-    let reload = cb => (demon.emit("restart"), browserSync.reload(), cb())
-
+    let reload = cb => (demon.emit("restart"), cb())
     gulp.watch("./app/**/*", gulp.series("build:client", reload));
     callback();
 });
@@ -34,14 +34,15 @@ gulp.task("serve", callback => {
     browserSync.init({
         port: config.BS_PORT,
         watch: false,        
-        proxy: "localhost:" + config.APP_PORT,
-        reloadDelay: 500 //ms
+        proxy: "localhost:" + config.APP_PORT        
     })
+
+    // debounce reloading to trailing edge
+    browserSync.reload = debounce(browserSync.reload, 700)
     
     demon = nodemon({
         script: "app/server.js",
         exec: "node -r @babel/register",
-        delay: "250ms",
         watch: false,
         env: {
             "NODE_ENV": "development",
@@ -49,9 +50,11 @@ gulp.task("serve", callback => {
         }
     });
 
-    demon.on("restart", () => console.log("Nodemon restarting the application..."));
-    demon.on("start", callback);
-
+    demon.on("start", () => {
+        console.log("Nodemon restarting the application...")
+        browserSync.reload();
+    });
+    callback();
 })
 
 gulp.task("build", gulp.parallel("build:client", "build:server"))

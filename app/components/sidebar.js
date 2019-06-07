@@ -12,19 +12,13 @@ export default class Sidebar extends React.Component {
         }
     }
 
-    toggle() {        
-        this.setState({
-            ...this.state,
-            active: !this.state.active
-        })
-    }
 
     render() {
         return (
-            <div className={ "sidebar " + (this.state.active ? "sidebar--active" : "") }>
+            <div className={ "sidebar " + (this.props.open ? "sidebar--active" : "") }>
                 <SettingsLink to="/">Home</SettingsLink>
                 <SettingsLink to="/settings">Settings</SettingsLink>
-                <button onClick={this.toggle.bind(this)} >some</button>
+                
             </div>
         )
     }

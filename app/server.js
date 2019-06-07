@@ -4,25 +4,39 @@ import webRouter from './routes/web-router';
 import compression from 'compression';
 import helmet from 'helmet';
 import session from 'express-session';
+import mongoose from "mongoose";
+import connectToMongo from "./models/db";
+import configureWebRouter from "./routes/web-router";
+import configureApiRouter from "./routes/api-router";
+import { createNoteModel } from "./models/note";
+import bodyParser from 'body-parser';
 
-const app = express();    
+let configureApp = dbconn => {
+    const app = express();
 
-app.use(helmet());
+    app.use(helmet());
 
-app.use(session({
-    secret: config.sessionSecret,
-    name: config.sessionId
-}))
+    app.use(session({
+        secret: config.sessionSecret,
+        name: config.sessionId
+    }))
 
-app.use(compression());
+    app.use(bodyParser())
 
-app.use("/s", express.static("public"));
+    app.use(compression());
+    app.use("/s", express.static("public"));
+    app.use("/api", configureApiRouter(express.Router(), dbconn));
+    app.use("/", configureWebRouter(express.Router()));
 
-app.use("/", webRouter);
+    app.listen(config.port, () => {
+        console.log(`App listening at port ${config.port}`);
+    });
+}
 
-app.listen(config.port, () => {
-    console.log(`Started app at port ${config.port}`);
-});
+connectToMongo().then(dbconn => {
+    createNoteModel(dbconn);
+    configureApp(dbconn);
+})
 
 
 
