@@ -14,6 +14,8 @@ let compilers = {};
 let webpackConfs = require("./webpack.config.js");
 let demon = null;
 
+// process.env.BABEL_ENV = "client";
+
 let buildFromEntry = (name, conf) => callback => {
     let compiler = compilers[name] || webpack(conf);
     compilers[name] = compiler;
@@ -45,6 +47,7 @@ gulp.task("serve", callback => {
         exec: "node -r @babel/register",
         watch: false,
         env: {
+            "BABEL_ENV": "server",
             "NODE_ENV": "development",
             "PORT": config.APP_PORT
         }

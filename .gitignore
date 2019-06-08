@@ -1,5 +1,6 @@
 dist/
 .vscode/
+public/bundle.js
 
 
 # Created by https://www.gitignore.io/api/node,visualstudiocode

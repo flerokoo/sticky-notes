@@ -5,3 +5,4 @@ redux saga
 разобраться с withRouter
 add logging
 check TODO comments
+auth for API calls (dont forget to disable session)

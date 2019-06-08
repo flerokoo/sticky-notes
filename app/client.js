@@ -26,11 +26,6 @@ let composition = (
     </Provider>
 );
 
-let isFirstRender = true;
+ReactDOM.hydrate(composition, root)
 
-isFirstRender && false
-    ? ReactDOM.hydrate(composition, root)
-    : ReactDOM.render(composition, root)
-
-isFirstRender = false;
 

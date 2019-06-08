@@ -17,7 +17,8 @@ const clientConfig = {
                 test: /\.js$/,
                 exclude: /node_modules/,
                 use: {
-                    loader: "babel-loader"
+                    loader: "babel-loader",
+                    options: require("./.babelrc").env.client
                 },
             },
             {
@@ -61,7 +62,7 @@ const serverConfig = {
                 test: /\.js$/,
                 exclude: /node_modules/,
                 use: {
-                loader: "babel-loader"
+                    loader: "babel-loader"
                 },
             }
         ]
@@ -72,6 +73,8 @@ const serverConfig = {
         })
     ]
 }
+
+console.log(require("./.babelrc").env.server)
 
 
 module.exports = {clientConfig, serverConfig}
