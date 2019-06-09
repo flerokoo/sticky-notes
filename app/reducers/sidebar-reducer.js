@@ -1,14 +1,14 @@
 import SidebarActions from "./sidebar-actions";
 
 
-export default function sidebarReducer(state = true, action) {    
+export default function sidebarReducer(state = {open: true}, action) {    
     switch (action.type) {
         case SidebarActions.OPEN:
-            return true;
+            return {open: true};
         case SidebarActions.CLOSE:
-            return false;
+            return {open: false};
         case SidebarActions.TOGGLE:
-            return !state;
+            return {open: !state.open};
         default:
             return state;
     }

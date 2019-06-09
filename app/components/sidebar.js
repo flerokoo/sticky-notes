@@ -18,6 +18,8 @@ export default class Sidebar extends React.Component {
             <div className={ "sidebar " + (this.props.open ? "sidebar--active" : "") }>
                 <SettingsLink to="/">Home</SettingsLink>
                 <SettingsLink to="/settings">Settings</SettingsLink>
+                <SettingsLink to="/login">[Debug] Login</SettingsLink>
+                <SettingsLink to="/register">[Debug] Register</SettingsLink>
                 <a href="/logout">Log out</a>
                 
             </div>

@@ -8,6 +8,10 @@ import { StaticRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import configureStore from '../reducers/configure-store';
 import passport from 'passport';
+import { LoginStatus } from '../constants';
+import UserActions from '../reducers/user-actions';
+import joi from 'joi';
+import { reduxStateSchema } from '../reducers/redux-state-schema';
 
 let indexTemplate = readFileSync("templates/index.ejs").toString();
 let formTemplate = readFileSync("templates/form.ejs").toString();
@@ -18,7 +22,7 @@ export default function configureWebRouter(router, dbconn) {
 
     let User = dbconn.model("User")
 
-    router.post("/register", (req, res) => {
+    router.post("/register", (req, res, next) => {
         // TODO validate everything
 
         let { username, password } = req.body;
@@ -27,26 +31,38 @@ export default function configureWebRouter(router, dbconn) {
         user.setPassword(password)
         user.save()
             .then(() => res.redirect("/").end())
-            .catch(() => res.status(500).end())
+            .catch(next)
 
     })
 
+    router.get("/login", (req, res, next) => req.isAuthenticated() ? res.redirect("/") : next())
+
     router.post("/login", (req, res, next) => {
+
         passport.authenticate('basic', (err, user, info) => {            
             if (err) {
-                return res.status(500).end()
+                return next(err);
             }
-
+           
             if (!user) {                
-                return res.redirect("/login")
+                return res.json(info);
             }
 
-            req.logIn(user, () => res.redirect("/"))
+            // req.logIn(user, () => res.redirect("/"));
+            req.logIn(user, err => {
 
-            // res.redirect("/");
-            console.log("posted to /login")
+                if (err) {
+                    return res.json({
+                        error: err
+                    });
+                }
 
-            
+                res.json({
+                    username: user.name,
+                    status: LoginStatus.SUCCESS
+                })
+            })
+
         })(req, res, next)
     })
 
@@ -55,9 +71,18 @@ export default function configureWebRouter(router, dbconn) {
         res.redirect("/login")
     })
 
-    let responseWithReact = (req, res) => {
+    let responseWithReact = (req, res, next) => {
         let context = {};
-        let store = configureStore();
+        let store = configureStore();        
+
+        if (req.user) {
+            store.dispatch({
+                type: UserActions.LOGIN_SUCCESS, payload: {
+                    username: req.user.name
+                }
+            })
+        }
+
         let react = ReactDOM.renderToString((
             <Provider store={store}>
                 <StaticRouter location={req.url} context={context}>
@@ -66,66 +91,33 @@ export default function configureWebRouter(router, dbconn) {
             </Provider>
         ));
 
-
+       
         if (context.url) {
             res.writeHead(301, {
                 Location: context.url
             });
             res.end();
         } else {
+            let storeState = store.getState();
+            let { error, validatedStoreState } = joi.validate(storeState, reduxStateSchema);
+
+            if (error) {
+                return next(error);
+            }
+
             let water = compiledIndex({
                 react,
-                redux: {
-                    ...store.getState(),
-                    user: !req.user ? undefined : {
-                        name: req.user.name
-                    }
-                },
+                redux: validatedStoreState,                
                 title: "Some title"
             })
 
             res.send(water);
         }
     }
-    
-    router.get(/(login|register)/i, responseWithReact)
-    // router.get("/*", (req, res, next) => {
-    //     console.log("START")
-    //     passport.authenticate("basic", (err, user, info) => {
-    //         console.log(err, user, info)
-    //         if (err) {
-    //             return res.status(500).end();
-    //         }
-
-    //         console.log(req.cookies)
-
-    //         if (!user) {
-    //             return res.redirect("/login");
-    //         }
-
-    //         res.redirect("/")
-    //     })(req, res, next)
-
-    //     // console.log(req.isAuthenticated())
-    // });
-    // let checkAuth = (req, res, next) => {
-    //     passport.authenticate("basic", (err, user, info) => {
-          
-    //         if (err) {
-    //             return res.status(500).end();
-    //         }
-
-    //         if (!user) {
-    //             console.log("redirecting to /login from " + req.url)
-    //             return res.redirect("/login");
-    //         }
-
-    //         req.logIn(user, () => next())
-
-    //     })(req, res, next)
-    // }
 
     let checkAuth = (req, res, next) => req.isAuthenticated() ? next() : res.redirect("/login")
+    let authMw = passport.authenticate("basic", { failureRedirect: "/login", successRedirect: "/" });
+    router.get(/(login|register)/i, responseWithReact)
 
     router.get("/*", checkAuth, responseWithReact)
     

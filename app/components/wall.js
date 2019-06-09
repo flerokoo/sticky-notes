@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
+import requireAuth from './require-auth';
 
-export default class Wall extends Component {
+class Wall extends Component {
     render() {
         return (
             <div className="page wall-page">
@@ -9,3 +10,5 @@ export default class Wall extends Component {
         )
     }
 }
+
+export default requireAuth(Wall)

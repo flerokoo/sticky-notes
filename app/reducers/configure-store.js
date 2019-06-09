@@ -1,6 +1,8 @@
-import { createStore, combineReducers } from 'redux'
+import { createStore, combineReducers, applyMiddleware } from 'redux'
+import createSagaMiddleware from 'redux-saga';
 import sidebarReducer from './sidebar-reducer';
 import userReducer from './user-reducer';
+import rootSaga from '../sagas/root-saga';
 
 
 export default function configureStore(preloadedState = {}) {
@@ -9,7 +11,13 @@ export default function configureStore(preloadedState = {}) {
         sidebar: sidebarReducer,
         user: userReducer
     })
-    
-    return createStore(combined, preloadedState);
 
+    let sagaMiddleware = createSagaMiddleware();
+    let enhancers = [ sagaMiddleware ]
+    
+    let store = createStore(combined, preloadedState, applyMiddleware(...enhancers));
+
+    sagaMiddleware.run(rootSaga)
+
+    return store;
 }

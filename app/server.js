@@ -16,6 +16,8 @@ import './auth/init';
 import { createUserModel } from "./models/user";
 import configurePassport from "./auth/init";
 import cookieParser from 'cookie-parser';
+import "regenerator-runtime/runtime";
+
 let configureApp = dbconn => {
 
     
@@ -52,6 +54,15 @@ let configureApp = dbconn => {
     app.use("/s", express.static("public"));
     app.use("/api", configureApiRouter(express.Router(), dbconn));
     app.use("/", configureWebRouter(express.Router(), dbconn));
+
+
+    // handle errors
+    // app.use((err, req, res, next) => {
+    //     if (res.headersSent) {
+    //         return next(err);
+    //     }
+    //     res.status(500).json({ error: err })
+    // })
 
     app.listen(config.port, () => {
         console.log(`App listening at port ${config.port}`);

@@ -7,6 +7,8 @@ import { BrowserRouter } from 'react-router-dom';
 import Main from "./components/main";
 import configureStore from "./reducers/configure-store";
 import { Provider } from 'react-redux';
+import "regenerator-runtime/runtime";
+import "core-js/stable";
 
 let preloadedState = {};
 
