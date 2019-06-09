@@ -115,8 +115,8 @@ export default function configureWebRouter(router, dbconn) {
         }
     }
 
-    let checkAuth = (req, res, next) => req.isAuthenticated() ? next() : res.redirect("/login")
-    let authMw = passport.authenticate("basic", { failureRedirect: "/login", successRedirect: "/" });
+    let checkAuth = (req, res, next) => req.isAuthenticated() ? next() : res.redirect("/login");
+    
     router.get(/(login|register)/i, responseWithReact)
 
     router.get("/*", checkAuth, responseWithReact)

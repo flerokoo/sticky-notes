@@ -1,0 +1,30 @@
+.fullscreen-form {
+    width: 100%;
+    height:100%;
+    display: flex;   
+    justify-content: center;
+    align-items: center;
+
+    h1 {
+        text-align: center;
+    }
+
+    &__inner {
+        width: 300px;        
+    }
+    
+    input {
+        display: block;
+        border: none;        
+        border-radius: 3px;
+        width: 100%;
+        padding: 0.5em 0.75em;
+        font-size: 1.5em;
+        margin-bottom: 0.5em;
+    }
+
+    input[type="button"] {
+        width: 50%;
+    }
+}
+

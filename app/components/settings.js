@@ -1,6 +1,7 @@
 import React from 'react';
+import requireAuth from './require-auth';
 
-export default class Settings extends React.Component {
+class Settings extends React.Component {
     render() {
         return (
             <div className="page settings-page">
@@ -9,3 +10,5 @@ export default class Settings extends React.Component {
         )
     }
 }
+
+export default requireAuth(Settings)

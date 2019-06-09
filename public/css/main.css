@@ -304,6 +304,31 @@ template {
 [hidden] {
   display: none; }
 
+.fullscreen-form {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center; }
+
+.fullscreen-form h1 {
+  text-align: center; }
+
+.fullscreen-form__inner {
+  width: 300px; }
+
+.fullscreen-form input {
+  display: block;
+  border: none;
+  border-radius: 3px;
+  width: 100%;
+  padding: 0.5em 0.75em;
+  font-size: 1.5em;
+  margin-bottom: 0.5em; }
+
+.fullscreen-form input[type="button"] {
+  width: 50%; }
+
 * {
   box-sizing: border-box;
   font-family: 'Roboto', sans-serif;
@@ -315,7 +340,16 @@ a {
 
 body, html, .app, .wrapper {
   width: 100%;
-  height: 100%; }
+  height: 100%;
+  /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#fce694+0,ffb593+100 */
+  background: #fce694;
+  /* Old browsers */
+  /* FF3.6-15 */
+  /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(to bottom, #fce694 0%, #ffb593 100%);
+  /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fce694', endColorstr='#ffb593',GradientType=0 );
+  /* IE6-9 */ }
 
 .sidebar {
   width: 200px;

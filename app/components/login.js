@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import axios from 'axios';
 import { Redirect } from 'react-router-dom';
+import FullscreenForm from './fullscreen-form';
 
 class Login extends React.Component {
 
@@ -28,15 +29,18 @@ class Login extends React.Component {
         }
         
         return (
-            <form method="post" action="/login">
-                <input ref={this.loginRef} type="text" name="username" defaultValue="emile"/>
-                <input ref={this.passwordRef} type="password" name="password" defaultValue="password"/>  
-                <Link to="/register">Registration</Link>
-                <Link to="/">To wall</Link>
+            <FullscreenForm title="Sign in">
+                <form method="post" action="/login">
+                    {/* <label>Login</label> */}
+                    <input ref={this.loginRef} type="text" placeholder="Username" name="username" defaultValue="emile"/>
+                    {/* <label>Password</label> */}
+                    <input ref={this.passwordRef} type="password" placeholder="Password" name="password" defaultValue="password"/>                      
+                    <input type="button" onClick={this.requestLogin.bind(this)} value="Go!" />
+                </form>   
+                <Link to="/register">Registration</Link> 
+                <Link to="/">To wall</Link> 
                 <Link to="/settings">To settings</Link>
-                <a onClick={this.requestLogin.bind(this)} >Login ajax</a>
-                <input type="submit" value="Submit http"/>
-            </form>            
+            </FullscreenForm>    
         )
     }
 }
